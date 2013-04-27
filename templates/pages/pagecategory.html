@@ -1,0 +1,17 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags pages_tags %}
+
+
+{% block main %}{{ block.super }}
+
+{% editable page.pagecategory.content %}
+{% with page.pagecategory.content as content %}
+{% if content %}
+    {{ content|richtext_filter|safe}} 
+{% endif %}
+{% endwith %} 
+{% endeditable %}
+
+{% page_menu "pages/menus/page_category.html" page %}
+
+{% endblock %}

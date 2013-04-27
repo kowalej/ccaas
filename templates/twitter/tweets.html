@@ -1,0 +1,44 @@
+
+{% load twitter_tags i18n %}
+
+
+{% tweets_for_user "CCAAS_Hamilton" 7 as ccTweets %}
+
+{% if tweets or ccTweets %}
+<h2>{% trans "TOILET TWEETS" %}</h2>
+<ul class="tweets">
+{% if ccTweets %}
+    {% for tweet in ccTweets %}
+    <li>
+		<p class="tweet">
+		<a href="http://twitter.com/{{ tweet.user_name }}" class="image"/>
+			<img src="{{ tweet.profile_image_url }}" class="left dinline" />
+		</a>
+		<a href="http://twitter.com/{{ tweet.user_name }}" 		
+		class="username dinline">{{ tweet.user_name }}</a> - 
+		{{ tweet.text|safe }}<br />
+	  	<span class="timespan">{{ tweet.created_at|timesince }} {% trans "ago" %}</span>
+		<div class="cl"></div>
+		</p>
+    </li>
+    {% endfor %}
+{% endif %}
+
+{% if tweets %}
+    {% for tweet in tweets %}
+    <li>
+		<p class="tweet">
+		<a href="http://twitter.com/{{ tweet.user_name }}" class="image"/>
+			<img src="{{ tweet.profile_image_url }}" class="left dinline" />
+		</a>
+		<a href="http://twitter.com/{{ tweet.user_name }}" 		
+		class="username dinline">{{ tweet.user_name }}</a> - 
+		{{ tweet.text|safe }}<br />
+	  	<span class="timespan">{{ tweet.created_at|timesince }} {% trans "ago" %}</span>
+		<div class="cl"></div>
+		</p>
+    </li>
+    {% endfor %}
+{% endif %}
+</ul>
+{% endif %}

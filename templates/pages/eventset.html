@@ -1,0 +1,32 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags %}
+
+
+{% block main %}{{ block.super }}
+
+{% editable page.eventset.content %}
+{% with page.eventset.content as content %}
+{% if content %}
+    {{ content|richtext_filter|safe}} 
+{% endif %}
+{% endwith %} 
+{% endeditable %}
+
+<ul class="page-list">
+{% for event in page.eventset.children.all %}
+{% editable event.title event.featured_image %}
+<li{% if not forloop.last %} class="page"{% endif %}>	
+	<h3><a href="{% url "page" event.slug %}">{{ event.title }}</a></h3>
+	{% with event.featured_image as fi %}
+	{% if fi %}
+		<a class="image" href="{% url "page" event.slug %}">
+			<img title="{{ event.title }}" alt="{{ event.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image" />
+		</a>
+	{% endif %}
+	{% endwith %}
+</li>
+{% endeditable %}
+{% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags cc_tags %}
+
+
+{% block main %}{{ block.super }}
+
+{% editable page.foreignschoolset.content %}
+{% with page.foreignschoolset.content as content %}
+{% if content %}
+    {{ content|richtext_filter|safe}} 
+{% endif %}
+{% endwith %}   
+{% endeditable %}
+
+<ul class="page-list">
+{% for school in schools %}
+{% editable school.foreignschool.title school.foreignschool.content school.foreignschool.country school.foreignschool.address school.foreignschool.city school.foreignschool.state school.foreignschool.zipcode school.foreignschool.headteacher school.foreignschool.students school.foreignschool.teachers school.foreignschool.programs %}
+<li{% if not forloop.last %} class="page"{% endif %}>
+	<h2><a href="{% url "page" school.slug %}">{{ school.title }}</a></h2>
+
+		<ul class="school-info-list">
+			{% with school.foreignschool.country as country %}
+			{% if country %}
+				<li>
+				<h4>Country:</h4>
+				{{ country }} 
+				</li>
+			{% endif %}
+			{% endwith %}
+
+			{% with school.foreignschool.address as address %}
+			{% if address %}
+				<li>
+				<h4>Address:</h4><br />
+				{{ address }}<br />
+				{{ school.foreignschool.city }}, {{ school.foreignschool.state }}<br />
+				{{ school.foreignschool.zipcode }}
+				</li>
+			{% endif %}
+			{% endwith %}
+
+			{% with school.foreignschool.students as students %}
+			{% if students %}
+				<li>
+				<h4>Number of Students (latest estimate):</h4> {{ students }}
+				</li>
+			{% endif %}
+			{% endwith %}
+
+			{% with school.foreignschool.teachers as teachers %}
+			{% if teachers %}
+				<li>
+				<h4>Number of Teachers (latest estimate):</h4> {{ teachers }}
+				</li>
+			{% endif %}
+			{% endwith %}
+
+			{% with school.foreignschool.headteacher as headteacher %}
+			{% if headteacher %}
+				<li>
+				<h4>Headteacher:</h4> {{ headteacher }}
+				</li>
+			{% endif %}
+			{% endwith %}		
+
+			{% with school.foreignschool.programs.all as programs %}
+			{% if programs %}
+				<li>
+				<h4>Participating Programs:</h4>
+				<ul>
+					{% for program in programs %}
+					<li><a href="{% url "page" program.slug %}">{{ program.title }}</a></li>
+					{% endfor %}
+				</ul>
+				</li>
+			{% endif %}
+			{% endwith %}
+		</ul>
+		{% endeditable %}
+
+</li>
+{% endfor %}
+</ul>
+
+{% pagination_for schools %}
+
+{% endblock %}

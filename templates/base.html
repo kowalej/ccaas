@@ -1,0 +1,88 @@
+{% load pages_tags mezzanine_tags i18n %}
+
+
+<!DOCTYPE html>
+<html lang="en-us" xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="{% if meta_keywords %}{% block meta_keywords %}{% endblock %}
+	{% else %}charity {% endif %}" />
+    <meta name="description" content="{% block meta_description %}{% endblock %}" />
+
+	<meta content=”Your description goes here…” name=”description”>
+	<meta content=”10 days”>
+	<meta content=”index, follow”>
+	<meta content=”All”>
+	<meta content=”index,follow”>
+	<meta content=”global”>
+
+    <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+
+    {% ifinstalled mezzanine.blog %}
+	<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
+	<link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
+	{% endifinstalled %}
+
+    <script language="javascript" src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
+    <script language="javascript" src="{{ STATIC_URL }}js/main.js"></script>
+
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/reset.css" type="text/css" />
+    {% block extra_head %}{% endblock %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/global.css" type="text/css" />
+
+</head>
+
+<body>
+{% include "includes/top_bar.html" %}
+
+{% page_menu "pages/menus/primary.html" %}
+
+<div id="main">
+	{% block before_main_content %}{% endblock %}
+	<div id="secondary-content-hide">x</div>
+	<div id="secondary-content-show">+</div>
+	<div class="tertiary-content left">
+		<div class="content">
+			{% include "side_facts/side_facts.html" %}
+		</div>
+	</div>
+
+	<div class="primary-content left">
+		<div class="content">
+		<h1>{% block title %}{% endblock %}</h1>
+		<div id="breadcrumb-menu">
+			{% block breadcrumb_menu %}
+			    {% page_menu "pages/menus/breadcrumb.html" %}
+			{% endblock %}
+		</div>
+        <div class="content-main">		
+		{% block main %}{% endblock %}
+        </div>
+		</div>
+	</div>
+
+	<div class="secondary-content right">
+		<div class="content">
+			<ul class="widgets">
+				{% block extra_widget_right_before %}{% endblock %}
+
+				{% if "mezzanine.twitter"|is_installed %}
+				<li>
+					{% include "twitter/tweets.html" %}
+				</li>
+				{% endif %}
+				
+				{% block extra_widget_right_after %}{% endblock %}
+			</ul>	
+		</div>
+	</div>
+	<div class="cb"></div>	
+</div>
+
+<div id="footer">
+	{% include "footer/footer.html" %}
+</div>
+</html>
+{% editable_loader %}
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags cc_tags %}
+
+
+{% block main %}{{ block.super }}
+
+{% editable page.programset.content %}
+{% with page.programset.content as content %}
+{% if content %}
+    {{ content|richtext_filter|safe}} 
+{% endif %}
+{% endwith %} 
+{% endeditable %}
+
+<ul class="page-list">
+{% for program in page.programset.children.all %}
+{% editable program.title %}
+<li{% if not forloop.last %} class="page"{% endif %}>
+	<h3><a href="{% url "page" program.slug %}">{{ program.title }}</a></h3>
+	{% with program.featured_image as fi %}
+	{% if fi %}
+		<a class="image" href="{% url "page" program.slug %}">
+			<img title="{{ program.title }}" alt="{{ program.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image" />
+		</a>
+	{% endif %}
+	{% endwith %}
+</li>
+{% endeditable %}
+{% endfor %}
+</ul>
+{% endblock %}

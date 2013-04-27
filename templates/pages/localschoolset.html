@@ -1,0 +1,88 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags cc_tags %}
+
+
+{% block main %}{{ block.super }}
+
+{% editable page.localschoolset.content %}
+{% with page.localschoolset.content as content %}
+{% if content %}
+    {{ content|richtext_filter|safe}} 
+{% endif %}
+{% endwith %} 
+{% endeditable %}
+
+<ul class="page-list">
+{% for school in schools %}
+{% editable school.localschool.title school.localschool.country school.localschool.address school.localschool.city school.localschool.state school.localschool.zipcode school.localschool.telephone school.localschool.website school.localschool.programs %}
+<li{% if not forloop.last %} class="page"{% endif %}>	
+	{% with school.localschool.logo as logo %}
+	{% if logo %}
+	<a class="image" href="{% url "page" school.slug %}">
+		<img title="{{ school.title }}" alt="{{ school.title }}" src="{{ MEDIA_URL }}{% thumbnail school.localschool.logo 150 0 %}" width="150" class="right" />
+	</a>
+	{% endif %}
+	{% endwith %}
+	<h2 class="dinline"><a href="{% url "page" school.slug %}">{{ school.title }}</a></h2>
+	
+	<ul class="school-info-list dinline-fix">
+		{% with school.localschool.country as country %}
+		{% if country %}
+			<li>
+			<h4>Country:</h4>
+			{{ country }} 
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with school.localschool.address as address %}
+		{% if address %}
+			<li>
+			<h4>Address:</h4><br />
+			{{ address }}<br />
+			{{ school.localschool.city }}, {{ school.localschool.state }}<br />
+			{{ school.localschool.zipcode }}
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with school.localschool.telephone as telephone %}
+		{% if telephone %}
+			<li>
+			<h4>Phone:</h4>
+			{{ telephone }}
+			</li> 
+		{% endif %}
+		{% endwith %}		
+
+		{% with school.localschool.website as website %}
+		{% if website %}
+			<li>	
+			<h4>Website:</h4>
+			<a href="{{ website }}">{{ website }}</a>
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with school.localschool.programs.all as programs %}
+		{% if programs %}
+			<li>
+			<h4>Participating Programs:</h4>
+			<ul>
+				{% for program in programs %}
+				<li><a href="{% url "page" program.slug %}">{{ program.title }}</a></li>
+				{% endfor %}
+			</ul>
+			</li>
+		{% endif %}
+		{% endwith %}
+	</ul>
+	<div class="cr"/>
+</li>
+{% endeditable %}
+{% endfor %}
+</ul>
+
+{% pagination_for schools %}
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags %}
+
+
+{% block main %}{{ block.super }}
+
+{% editable page.featured_image %}
+{% with page.event.featured_image as fi %}
+{% if fi %}
+	<img title="{{ page.title }}" alt="{{ page.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image-pagetop" />
+{% endif %}
+{% endwith %}
+{% endeditable %}
+
+{% editable page.event.content %}
+{{ page.event.content|richtext_filter|safe }}
+{% endeditable %}
+
+
+{% endblock %}

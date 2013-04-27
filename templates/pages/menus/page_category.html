@@ -1,0 +1,22 @@
+{% load mezzanine_tags %}
+
+{% spaceless %}
+	{% if page_branch %}
+	<ul class="page-list">
+	{% for page in page_branch %}
+	{% editable page.title %}
+	<li{% if not forloop.last %} class="page"{% endif %}>
+		<h3><a href="{% url "page" page.slug %}">{{ page.title }}</a></h3>
+		{% with page.featured_image as fi %}
+		{% if fi %}
+			<a class="image" href="{% url "page" page.slug %}">
+				<img title="{{ page.title }}" alt="{{ page.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image" />
+			</a>
+		{% endif %}
+		{% endwith %}
+	</li>
+	{% endeditable %}
+	{% endfor %}
+	</ul>
+	{% endif %}
+{% endspaceless %}

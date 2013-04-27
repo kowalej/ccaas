@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load i18n mezzanine_tags blog_tags keyword_tags cc_tags disqus_tags %}
+
+
+{% block extra_head %}
+<script language="javascript" src="{{ STATIC_URL }}js/jquery.flexslider-min.js"></script>
+
+<script type="text/javascript">
+	$(window).load(function() {
+		$('.flexslider').flexslider({
+		  	animation: "slide",
+		  	controlsContainer: ".flex-container",
+			controlNav: true,
+			directionNav: true,
+			pauseOnAction: true, 
+			slideshowSpeed: 6500,         
+			animationDuration: 800,
+			manualControls: ".flex-controls li"
+	  });
+	});
+</script>
+
+<link rel="stylesheet" href="{{ STATIC_URL }}css/flexslider.css" type="text/css" />
+{% endblock %}
+
+{% block meta_title %}{% metablock %}Home{% endmetablock %}{% endblock %}
+{% block meta_description %}{% metablock %}{% endmetablock %}{% endblock %}
+
+
+{% block before_main_content %}	
+{% get_slides 5 slides %}
+	{% if slides %}
+	<div class="flex-container">
+		<div class="flexslider">
+			<ul class="slides">
+			{% for slide in slides %}
+				{% with slide.slide_link as link %}
+				<li>		
+					{% if link %}
+					<a href="{{ link }}" class="image">
+					{% endif %}
+
+					{{ slide.content|richtext_filter|safe }}
+					{% with slide.caption as caption %}
+					{% if caption %}
+					<p class="flex-caption">{{ caption }}</p>
+					{% endif %}
+
+					{% if link %}</a>{% endif %}
+					{% endwith %}
+				</li>
+			
+				{% endwith %}
+			{% endfor %}
+			</ul>
+		</div>
+	
+		<div class="flex-controls">
+			<ul>
+			{% for slide in slides %}
+			<li><a class="button" href="#">{{ slide.title }}</a></li>
+			{% endfor %}
+			<div class="cl"></div>
+			</ul>
+			<div class="cr"></div>
+		</div>
+
+	</div>				
+	{% endif %}
+{% endblock %}
+
+{% block main %}
+
+{% blog_recent_posts 3 as recent_posts %}
+{% if recent_posts %}
+<h2 id="home">{% trans "The Latest at Connecting Countries:" %}</h2>
+<ol class="blog-posts">
+{% for blog_post in recent_posts %}
+{% editable blog_post.title blog_post.publish_date %}
+<li>
+	<div class="blog-post-description">
+		{{ blog_post.publish_date}}  |
+		{% with blog_post.user as author %}{% trans "By" %}:
+		<a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }}</a>
+		{% endwith %}
+		{% with blog_post.category_list as category_list %}
+		{% if category_list %} | {% trans "In" %}:
+		{% for category in category_list %}
+		<a href="{% url "blog_post_list_category" category.slug %}">{{ category }}{% if not forloop.last %},{% endif %} </a>
+		{% endfor %}
+		{% endif %}	
+		{% endwith %}
+	</div>
+	<h2 class="blog-post-title">
+		<a href="{% url "blog_post_detail" blog_post.slug %}">{{ blog_post.title }}</a>
+	</h2>
+	{% endeditable %}
+
+	{% editable blog_post.content %}
+	<p>{{ blog_post.description|safe|slice:":300" }}...</p>
+	{% endeditable %}
+
+	<p class="description">
+		{% if blog_post.keyword_list %}
+		{% trans "Tags" %}:
+		{% for tag in blog_post.keyword_list %}
+		<a href="{% url "blog_post_list_tag" tag.slug %}">{{ tag }}</a>
+		{% endfor %}
+		<br />
+		{% endif %}
+		<a href="{% url "blog_post_detail" blog_post.slug %}">{% trans "read more" %}</a>
+		/
+		{% if settings.COMMENTS_DISQUS_SHORTNAME %}
+		<a href="{% url "blog_post_detail" blog_post.slug %}#disqus_thread"
+		    data-disqus-identifier="{% disqus_id_for blog_post %}">
+		    {% trans "Comments" %}
+		</a>
+		{% else %}
+		<a href="{% url "blog_post_detail" blog_post.slug %}#comments">
+		    {% blocktrans count blog_post.comments_count as comments_count %}
+		    1 comment
+		    {% plural %}
+		    {{ comments_count }} comments
+		    {% endblocktrans %}
+		</a>
+		{% endif %}
+	</p>
+</li>
+{% endfor %}
+</ol>
+
+{% endif %}
+
+{% get_home_page home_page %}
+
+<h2>Sanitation Has Been Called "The Silent Emergency"</h2>
+{{ home_page.richtextpage.content|richtext_filter|safe }}
+
+
+{% endblock %}

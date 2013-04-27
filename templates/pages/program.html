@@ -1,0 +1,43 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags cc_tags %}
+
+
+{% block main %}{{ block.super }}
+
+{% with page.program.featured_image as fi %}
+{% if fi %}
+	<img title="{{ page.title }}" alt="{{ page.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image-pagetop" />
+{% endif %}
+{% endwith %}
+
+{% editable page.program.content page.program.gallery page.program.blog_category %}
+{{ page.program.content|richtext_filter|safe }}
+
+{% with page.program.blog_category.id as blog_category_id %}
+{% if blog_category_id %}
+	{% recent_blog_posts_by_cat blog_category_id 4 as recent_posts %}
+	{% if recent_posts %}
+	<div class="blog-posts">
+		<h2>Recent Blog Posts:</h2>
+		<ul>
+			{% for recent_post in recent_posts %}
+			<li><a href="/blog/{{ recent_post.slug }}">{{ recent_post.title }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+{% endif %}
+{% endwith %}
+
+{% with page.program.gallery.id as image_gallery_id %}
+{% if image_gallery_id %}
+	<div class="gallery">
+	<h2>Images From {{ page.title }}</h2>
+		{% include "generic/gallery.html" with gallery_id=image_gallery_id only %}
+	</div>
+{% endif %}
+{% endwith %}
+
+{% endeditable %}
+
+{% endblock %}

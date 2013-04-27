@@ -1,0 +1,25 @@
+{% load cc_tags %}
+
+{% spaceless %}
+	{% if page_branch %}
+		<ul{% if page.is_current_or_ascendant %} class="current"{% endif %}>
+		{% for page in page_branch %}
+		    {% if page.in_menu %}
+			<li id="main-menu-{{ page.html_id }}"
+			{% if forloop.last %}
+			class="last"
+			{% endif %}
+			>
+			<a href="{{ page.get_absolute_url }}"
+			{% if page.is_current_or_ascendant or forloop.first or forloop.last %}	
+			class="{% if page.is_current_or_ascendant %}current{% endif %}
+			{% endif %}
+			">
+			{% upper %}{{ page.title }}{% endupper %}
+			</a>
+			</li>
+			{% endif %}
+		{% endfor %}
+		</ul>
+	{% endif %}
+{% endspaceless %}

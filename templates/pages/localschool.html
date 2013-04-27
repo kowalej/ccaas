@@ -1,0 +1,94 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags cc_tags %}
+
+
+{% block main %}{{ block.super }}
+
+	{% editable page.localschool.country page.localschool.address page.localschool.city page.localschool.state page.localschool.zipcode page.localschool.telephone page.localschool.website page.localschool.programs page.localschool.gallery page.localschool.blog_category %}
+	{% with page.localschool.logo as logo %}
+	{% if logo %}
+		<img title="{{ page.title }}" alt="{{ page.title }}" src="{{ MEDIA_URL }}{% thumbnail page.localschool.logo 150 0 %}" width="150" class="school-logo" />
+	{% endif %}
+	{% endwith %}
+
+	<ul class="school-info-list">
+		{% with page.localschool.country as country %}
+		{% if country %}
+			<li>
+			<h4>Country:</h4>
+			{{ country }} 
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with page.localschool.address as address %}
+		{% if address %}
+			<li>
+			<h4>Address:</h4><br />
+			{{ address }}<br />
+			{{ page.localschool.city }}, {{ page.localschool.state }}<br />
+			{{ page.localschool.zipcode }}
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with page.localschool.telephone as telephone %}
+		{% if telephone %}
+			<li>
+			<h4>Phone:</h4>
+			{{ telephone }}
+			</li> 
+		{% endif %}
+		{% endwith %}		
+
+		{% with page.localschool.website as website %}
+		{% if website %}
+			<li>	
+			<h4>Website:</h4>
+			<a href="{{ website }}">{{ website }}</a>
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with page.localschool.programs.all as programs %}
+		{% if programs %}
+			<li>
+			<h4>Participating Programs:</h4>
+			<ul>
+				{% for program in programs %}
+				<li><a href="{% url "page" program.slug %}">{{ program.title }}</a></li>
+				{% endfor %}
+			</ul>
+			</li>
+		{% endif %}
+		{% endwith %}
+		</ul>
+
+{% with page.localschool.blog_category.id as blog_category_id %}
+{% if blog_category_id %}
+	{% recent_blog_posts_by_cat blog_category_id 4 as recent_posts %}
+	{% if recent_posts %}
+	<div class="blog-posts">
+		<h3>Recent Blog Posts:</h3>
+		<ul>
+			{% for recent_post in recent_posts %}
+			<li><a href="/blog/{{ recent_post.slug }}">{{ recent_post.title }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+{% endif %}
+{% endwith %}
+
+{% with page.localschool.gallery.id as image_gallery_id %}
+{% if image_gallery_id %}
+	<div class="gallery">
+	<h3>Images From {{ page.title }}</h3>
+		{% include "generic/gallery.html" with gallery_id=image_gallery_id only %}
+	</div>
+{% endif %}
+{% endwith %}
+
+{% endeditable %}
+
+{% endblock %}

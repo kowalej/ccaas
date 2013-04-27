@@ -1,0 +1,31 @@
+{% load i18n pages_tags %}
+{% load cc_tags %}
+
+{% spaceless %}
+{% if not on_home %}
+{% for page in page_branch %}
+
+    {% if page.is_primary and forloop.first %}
+    <ul>
+    <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+    {% endif %}
+    
+    {% if page.is_current_or_ascendant %}
+    <li> &gt; 
+        {% if page.is_current %}
+        {{ page.title }}
+        {% else %}
+        <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+        {% endif %}
+    </li>
+    {% page_menu page %}
+    {% endif %}
+
+    {% if page.is_primary and forloop.last %}
+    </ul>
+    {% endif %}
+
+{% endfor %}
+{% endif %}
+
+{% endspaceless %}

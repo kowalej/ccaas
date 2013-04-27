@@ -1,0 +1,28 @@
+{% load i18n future pages_tags %}
+{% load cc_tags %}
+
+{% spaceless %}
+{% if page_branch %}
+
+	{% for page in page_branch %}
+
+	{% if page.in_menu %}
+	<li id="main-menu-{{ page.html_id }}">
+		<a href="{{ page.get_absolute_url }}"
+
+		{% if page.is_current_or_ascendant or forloop.last %}
+		class="{% if page.is_current_or_ascendant %}current{% endif %} 	
+        	{% if forloop.last %} last{% endif %}"{% endif %}
+		>
+		{% upper %}{{ page.title }}{% endupper %}
+		</a>
+
+		{% page_menu "pages/menus/tree_submenu.html" page %}
+
+	</li>
+    {% endif %}
+
+	{% endfor %}
+
+{% endif %}
+{% endspaceless %}

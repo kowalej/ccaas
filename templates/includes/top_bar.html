@@ -1,0 +1,38 @@
+{% load pages_tags mezzanine_tags i18n %}
+
+
+<div id="topbar">
+	<div id="topbar-content">
+		<div id="topbar-left">
+		    <div id="searchwrapper">
+			<form action="{% url "search" %}">
+			    <input type="text" name="q" value="{{ request.REQUEST.q }}"/>
+			    <input type="image" src="{{ STATIC_URL }}images/top/searchicon.png" class="searchbox_submit" type="submit" />
+			</form>
+		    </div>
+		</div>
+
+		<div id="topbar-message">
+		{% autoescape off %}
+			<div class="text">{{ settings.TOP_BAR_MOTD }}</div>
+		{% endautoescape %}
+		</div>
+
+		<div id="topbar-right">
+        <div id="topbar-social">
+            <a href="{{ settings.SOCIAL_TWITTER_PROFILE_URL }}" class="image"><img src="{{ STATIC_URL }}images/twitter-logo.png" width="20" height="20" /></a>
+            <a href="{{ settings.SOCIAL_FACEBOOK_PROFILE_URL }}" class="image"><img src="{{ STATIC_URL }}images/f-logo.png" width="20" height="20" /></a>
+			<a href="{{ settings.SOCIAL_YOUTUBE_PROFILE_URL }}" class="image"><img src="{{ STATIC_URL }}images/youtube-logo.png" height="20" /></a>
+        </div>
+		{% if "cartridge.shop"|is_installed %}
+	    		{% if request.user.is_authenticated %}
+		    		{% trans "Logged in as: " %}{{ request.user.username }} /
+		    		<a href="{{ settings.LOGOUT_URL }}?next={{ request.path }}">{% trans "Log out" %}</a>
+		    	{% else %}
+		    	<a href="{{ settings.LOGIN_URL }}?next={{ request.path }}">{% trans "Log in or sign up" %}</a>
+	   		{% endif %}
+		{% endif %}
+		</div> 
+	   	<div class="cb"></div>
+	</div>
+</div>

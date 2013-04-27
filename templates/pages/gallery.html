@@ -1,0 +1,36 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags cc_tags %}
+
+
+{% block extra_head %}
+{{ block.super }}
+<script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.easing-1.3.4.pack.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/gallery.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+{% endblock %}
+
+{% block main %}
+{{ block.super }}
+
+{% editable page.gallery.content %}
+{{ page.gallery.content|richtext_filter|safe }}
+{% endeditable %}
+
+{% with page.gallery.images.all as images %}
+<ul class="gallery">
+{% for image in images %}
+	<li>
+		<a class="image-gallery image{% if image.description|is_link %} link{% endif %}" rel="group1" href="{% if image.description|is_link %}{{ image.description }}{% else %}{{ MEDIA_URL }}{{ image.file }}{% endif %}" title="{{ image.description }}">
+			<img title="{{ image.description }}" alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 140 0 %}" />
+		</a>
+	</li>
+	{% if forloop.counter|divisibleby:"3" %}<div class="cl"></div>{% endif %} 
+{% endfor %}
+</ul>
+<div class="cl"></div>
+{% endwith %}
+
+{% endblock %}
+

@@ -1,0 +1,101 @@
+{% extends "pages/page.html" %}
+{% load mezzanine_tags cc_tags %}
+
+
+{% block main %}{{ block.super }}
+
+{% editable page.foreignschool.title page.foreignschool.content page.foreignschool.country page.foreignschool.address page.foreignschool.city page.foreignschool.state page.foreignschool.zipcode page.foreignschool.headteacher page.foreignschool.students page.foreignschool.teachers page.foreignschool.programs page.foreignschool.gallery page.foreignschool.blog_category %}
+
+    {% with page.foreignschool.content as content %}
+	{% if content %}
+		{{ content|richtext_filter|safe}} 
+	{% endif %}
+	{% endwith %}
+
+	<ul class="school-info-list">
+		{% with page.foreignschool.country as country %}
+		{% if country %}
+			<li>
+			<h4>Country:</h4>
+			{{ country }} 
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with page.foreignschool.address as address %}
+		{% if address %}
+			<li>
+			<h4>Address:</h4><br />
+			{{ address }}<br />
+			{{ page.foreignschool.city }}, {{ page.foreignschool.state }}<br />
+			{{ page.foreignschool.zipcode }}
+			</li>
+		{% endif %}
+		{% endwith %}	
+
+		{% with page.foreignschool.students as students %}
+		{% if students %}
+			<li>
+			<h4>Number of Students (latest estimate):</h4> {{ students }}
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with page.foreignschool.teachers as teachers %}
+		{% if teachers %}
+			<li>
+			<h4>Number of Teachers (latest estimate):</h4> {{ teachers }}
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with page.foreignschool.headteacher as headteacher %}
+		{% if headteacher %}
+			<li>
+			<h4>Headteacher:</h4> {{ headteacher }}
+			</li>
+		{% endif %}
+		{% endwith %}
+
+		{% with page.foreignschool.programs.all as programs %}
+		{% if programs %}
+			<li>
+			<h4>Participating Programs:</h4>
+			<ul>
+				{% for program in programs %}
+				<li><a href="{% url "page" program.slug %}">{{ program.title }}</a></li>
+				{% endfor %}
+			</ul>
+			</li>
+		{% endif %}
+		{% endwith %}
+		</ul>
+
+{% with page.foreignschool.blog_category.id as blog_category_id %}
+{% if blog_category_id %}
+	{% recent_blog_posts_by_cat blog_category_id 4 as recent_posts %}
+	{% if recent_posts %}
+	<div class="blog-posts">
+		<h3>Recent Blog Posts:</h3>
+		<ul>
+			{% for recent_post in recent_posts %}
+			<li><a href="/blog/{{ recent_post.slug }}">{{ recent_post.title }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+{% endif %}
+{% endwith %}
+
+{% with page.foreignschool.gallery.id as image_gallery_id %}
+{% if image_gallery_id %}
+	<div class="gallery">
+	<h3>Images From {{ page.title }}</h3>
+		{% include "generic/gallery.html" with gallery_id=image_gallery_id only %}
+	</div>
+{% endif %}
+{% endwith %}
+
+{% endeditable %}
+	
+{% endblock %}

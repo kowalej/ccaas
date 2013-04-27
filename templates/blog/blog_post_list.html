@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load i18n mezzanine_tags blog_tags keyword_tags disqus_tags cc_tags %}
+
+
+{% block meta_title %}{{ blog_page.title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+{% keywords_for blog_page as keywords %}
+{% for keyword in keywords %}
+    {% if not forloop.first %}, {% endif %}
+    {{ keyword }}
+{% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+{{ blog_page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+{% upper %}{{ blog_page.title }}{% endupper %}
+{% endblock %}
+
+{% block main %}
+
+{% if tag or category or year or month or author %}
+    <p class="description">
+    {% if tag %}
+        {% trans "Viewing posts tagged" %} {{ tag }}
+    {% else %}{% if category %}
+        {% trans "Viewing posts for the category" %} {{ category }}
+    {% else %}{% if year or month %}
+        {% trans "Viewing posts from" %} {% if month %}{{ month }}, {% endif %}
+    {{ year }}
+    {% else %}{% if author %}
+        {% trans "Viewing posts by" %}
+        {{ author.get_full_name|default:author.username }}
+    {% endif %}{% endif %}{% endif %}{% endif %}
+    </p>
+{% else %}
+    {% editable blog_page.content %}
+    {{ blog_page.content|safe }}
+    {% endeditable %}
+{% endif %}
+<ol class="blog-posts">
+{% for blog_post in blog_posts.object_list %}
+{% editable blog_post.title blog_post.publish_date %}
+<li>
+	<div class="blog-post-description">
+		{{ blog_post.publish_date}}  |
+		{% with blog_post.user as author %}{% trans "By" %}:
+		<a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }}</a>
+		{% endwith %}
+		{% with blog_post.category_list as category_list %}
+		{% if category_list %} | {% trans "In" %}:
+		{% for category in category_list %}
+		<a href="{% url "blog_post_list_category" category.slug %}">{{ category }}{% if not forloop.last %},{% endif %} </a>
+		{% endfor %}
+		{% endif %}	
+		{% endwith %}
+	</div>
+	<h2 class="blog-post-title">
+		<a href="{% url "blog_post_detail" blog_post.slug %}">{{ blog_post.title }}</a>
+	</h2>
+	{% endeditable %}
+
+	{% editable blog_post.content %}
+	<p>{{ blog_post.description|safe|slice:":300" }}...</p>
+	{% endeditable %}
+
+	<p class="description">
+		{% if blog_post.keyword_list %}
+		{% trans "Tags" %}:
+		{% for tag in blog_post.keyword_list %}
+		<a href="{% url "blog_post_list_tag" tag.slug %}">{{ tag }}</a>
+		{% endfor %}
+		<br />
+		{% endif %}
+		<a href="{% url "blog_post_detail" blog_post.slug %}">{% trans "read more" %}</a>
+		/
+		{% if settings.COMMENTS_DISQUS_SHORTNAME %}
+		<a href="{% url "blog_post_detail" blog_post.slug %}#disqus_thread"
+		    data-disqus-identifier="{% disqus_id_for blog_post %}">
+		    {% trans "Comments" %}
+		</a>
+		{% else %}
+		<a href="{% url "blog_post_detail" blog_post.slug %}#comments">
+		    {% blocktrans count blog_post.comments_count as comments_count %}
+		    1 comment
+		    {% plural %}
+		    {{ comments_count }} comments
+		    {% endblocktrans %}
+		</a>
+		{% endif %}
+	</p>
+</li>
+{% endfor %}
+</ol>
+
+{% pagination_for blog_posts %}
+
+{% if settings.COMMENTS_DISQUS_SHORTNAME %}
+{% include "generic/includes/disqus_counts.html" %}
+{% endif %}
+
+{% endblock %}
+
+{% block extra_widget_right_before %}
+<li>
+{% include "blog/includes/filter_panel.html" %}
+</li>
+{% endblock %}

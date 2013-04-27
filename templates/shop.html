@@ -1,0 +1,107 @@
+{% load pages_tags mezzanine_tags i18n shop_tags %}
+<html lang="en-us" xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+    <meta name="description" content="{% block meta_description %}{% endblock %}" />
+    <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+
+    {% if "mezzanine.blog"|is_installed %}
+    <link rel="alternate" type="application/rss+xml" title="RSS"
+        href="{% url "blog_post_feed" "rss" %}" />
+    <link rel="alternate" type="application/atom+xml" title="Atom"
+        href="{% url "blog_post_feed" "atom" %}" />
+    {% endif %}
+
+    <script language="javascript" src="{{ STATIC_URL }}js/jquery-1.4.4.min.js"></script>
+    <script language="javascript" src="{{ STATIC_URL }}js/main.js"></script>
+
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/global.css" type="text/css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/shop.css" type="text/css" />
+
+    {% block extra_head %}{% endblock %}
+
+</head>
+<body>
+
+<div id="topbar">
+	<div id="topbarcontent">
+		<div id="topbarleft">
+		    <div id="searchwrapper">
+			<form action="{% url "search" %}">
+			    <input type="text" name="q" value="{{ request.REQUEST.q }}"/>
+			    <input type="image" src="{{ STATIC_URL }}/images/searchicon.png" class="searchbox_submit" type="submit" />
+			</form>
+		    </div>
+		</div>
+
+		<div id="topbarright">
+	    		{% if request.user.is_authenticated %}
+		    		{% trans "Logged in as: " %}{{ request.user.username }} /
+		    		<a href="{% url "shop_logout" %}?next={{ request.path }}">{% trans "Log out" %}</a>
+		    	{% else %}
+		    	<a href="{{ settings.LOGIN_URL }}?next={{ request.path }}">{% trans "Log in or sign up" %}</a>
+	   		{% endif %}
+		</div> 
+	   	<div class="cl"></div>
+	</div>
+</div>
+
+{% page_menu "pages/menus/primary.html" %}
+
+<div id="main-container">
+	<div id="secondary-content-hide">x</div>
+	<div id="main">
+
+		<div class="tertiary-content left">
+			<div class="content">
+				{% include "side_facts/side_facts.html" %}
+			</div>
+		</div>
+		
+		<div class="primary-content left">
+			<div class="content">
+			
+			<h1>{% block title %}{% endblock %}</h1>
+			<div id="breadcrumb-menu">
+				{% block breadcrumb_menu %}
+				    {% page_menu "pages/menus/breadcrumb.html" %}
+				{% endblock %}
+			</div>		
+			{% block main %}{% endblock %}
+			</div>
+		</div>
+
+ 		<div class="secondary-content right">
+			<div class="content">
+
+				<ul class="widgets">
+					
+					<li> {% with request.cart.total_quantity as cart_quantity %}{% endwith %}
+						{% include "includes/cart_panel.html" %}
+					</li>
+
+					{% block right_panel %}
+						{% if "mezzanine.twitter"|is_installed %}
+						<li>
+							{% include "twitter/tweets.html" %}
+						</li>
+						{% endif %}
+					{% endblock %}
+				</ul>		
+				<div class="cr"></div>	
+			</div>
+		</div>
+		<div class="cb"></div>	
+	</div>
+</div>
+
+<div id="footer">
+	{% page_menu "pages/menus/footer.html" %}
+	{% include "includes/footer_scripts.html" %}
+</div>
+
+</body>
+</html>
