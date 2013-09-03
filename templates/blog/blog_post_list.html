@@ -1,11 +1,10 @@
 {% extends "base.html" %}
-{% load i18n mezzanine_tags blog_tags keyword_tags disqus_tags cc_tags %}
+{% load mezzanine_tags comment_tags keyword_tags rating_tags i18n future disqus_tags cc_tags %}
 
-
-{% block meta_title %}{{ blog_page.title }}{% endblock %}
+{% block meta_title %}{% if page %}{{ page.richtextpage.meta_title }}{% else %}{% trans "Blog" %}{% endif %}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
-{% keywords_for blog_page as keywords %}
+{% keywords_for page as keywords %}
 {% for keyword in keywords %}
     {% if not forloop.first %}, {% endif %}
     {{ keyword }}
@@ -13,11 +12,33 @@
 {% endmetablock %}{% endblock %}
 
 {% block meta_description %}{% metablock %}
-{{ blog_page.description }}
+{{ page.description }}
 {% endmetablock %}{% endblock %}
 
 {% block title %}
-{% upper %}{{ blog_page.title }}{% endupper %}
+{% if page %}
+{% editable page.title %}{{ page.title }}{% endeditable %}
+{% else %}
+{% trans "Blog" %}
+{% endif %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+{{ block.super }}
+{% if tag or category or year or month or author %}
+<li>{% spaceless %}
+{% if tag %}
+    {% trans "Tag:" %} {{ tag }}
+{% else %}{% if category %}
+    {% trans "Category:" %} {{ category }}
+{% else %}{% if year or month %}
+    {% if month %}{{ month }}, {% endif %}{{ year }}
+{% else %}{% if author %}
+    {% trans "Author:" %} {{ author.get_full_name|default:author.username }}
+{% endif %}{% endif %}{% endif %}{% endif %}
+{% endspaceless %}
+</li>
+{% endif %}
 {% endblock %}
 
 {% block main %}

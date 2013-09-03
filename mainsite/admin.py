@@ -11,7 +11,7 @@ local_school_extra_fieldsets = ("country", "address", "city", "state", "zipcode"
 foreign_school_extra_fieldsets = ("country", "address", "city", "state", "zipcode", "headteacher", "students", "teachers", "programs", "gallery", "blog_category",)
 program_extra_fieldsets = ("gallery", "blog_category")
 slide_extra_fieldsets = ("caption", "slide_link",)
-featured_image_fieldset = ("featured_image",)
+featured_image_fieldset = ("featured_image_cc",)
 rt_page_fieldsets = ("content", "in_menus", "login_required")
 
 class LocalSchoolAdmin(PageAdmin):

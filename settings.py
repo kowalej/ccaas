@@ -72,7 +72,7 @@ PAGE_MENU_TEMPLATES_DEFAULT = ()
 
 EXTRA_MODEL_FIELDS = (
 	(
-		"mezzanine.pages.models.Page.featured_image",
+		"mezzanine.pages.models.Page.featured_image_cc",
 		"mezzanine.core.fields.FileField", # 'django.db.models.' is implied if path is omitted.        filebrowser_safe.fields.FileField
 		("Featured Image",),
 		{"upload_to": "featured_images", "null": True, "max_length": 255, "blank": True},
@@ -248,6 +248,7 @@ INSTALLED_APPS = (
     "mezzanine.galleries",
     "mezzanine.twitter",
     #"mezzanine.accounts",
+	"cartridge.shop",
 	"mainsite",
     #"mezzanine.mobile",
 )
@@ -287,12 +288,14 @@ MIDDLEWARE_CLASSES = (
     # "mezzanine.core.middleware.SSLRedirectMiddleware",
     "mezzanine.pages.middleware.PageMiddleware",
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
+    "cartridge.shop.middleware.ShopMiddleware",
 )
 
 # Store these package names here as they may change in the future since
 # at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
+
 
 #########################
 # OPTIONAL APPLICATIONS #
@@ -308,6 +311,7 @@ OPTIONAL_APPS = (
 )
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
+
 
 ###################
 # DEPLOY SETTINGS #
@@ -344,6 +348,7 @@ try:
     from local_settings import *
 except ImportError:
     pass
+ALLOWED_HOSTS = {'.'}
 
 
 ####################

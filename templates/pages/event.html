@@ -4,8 +4,8 @@
 
 {% block main %}{{ block.super }}
 
-{% editable page.featured_image %}
-{% with page.event.featured_image as fi %}
+{% editable page.featured_image_cc %}
+{% with page.event.featured_image_cc as fi %}
 {% if fi %}
 	<img title="{{ page.title }}" alt="{{ page.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image-pagetop" />
 {% endif %}

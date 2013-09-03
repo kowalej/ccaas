@@ -1,7 +1,7 @@
 {% extends "blog/blog_post_list.html" %}
-{% load mezzanine_tags comment_tags keyword_tags rating_tags i18n cc_tags %}
+{% load mezzanine_tags comment_tags keyword_tags rating_tags i18n future disqus_tags cc_tags %}
 
-{% block meta_title %}{{ blog_post.title }}{% endblock %}
+{% block meta_title %}{{ blog_post.meta_title }}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
 {% keywords_for blog_post as tags %}
@@ -13,7 +13,12 @@
 {% endmetablock %}{% endblock %}
 
 {% block title %}
-{% editable %}{% upper %}{{ blog_post.title }}{% endupper %}{% endeditable %}
+{% editable blog_post.title %}{{ blog_post.title }}{% endeditable %}
+{% endblock %}
+
+{% block breadcrumb_menu %}
+{{ block.super }}
+<li class="active">{{ blog_post.title }}</li>
 {% endblock %}
 
 {% block extra_head %}
@@ -24,14 +29,6 @@
         });
     });
 </script>
-{% endblock %}
-
-{% block breadcrumb_menu %}
-<ul>
-    <li><a href="{% url "home" %}">{% trans "Home" %}</a> &gt;</li>
-    <li><a href="{% url "blog_post_list" %}">{{ blog_page.title }}</a> &gt;</li>
-    <li>{{ blog_post.title }}</li>
-</ul><br />
 {% endblock %}
 
 {% block main %}

@@ -5,18 +5,12 @@
 <html lang="en-us" xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+    <meta name="description" content="{% block meta_description %}{% endblock %}" />
     <meta name="keywords" content="{% if meta_keywords %}{% block meta_keywords %}{% endblock %}
 	{% else %}charity {% endif %}" />
-    <meta name="description" content="{% block meta_description %}{% endblock %}" />
-
-	<meta content=”Your description goes here…” name=”description”>
-	<meta content=”10 days”>
-	<meta content=”index, follow”>
-	<meta content=”All”>
-	<meta content=”index,follow”>
-	<meta content=”global”>
-
-    <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+	<meta name="robots" content="index, follow" />
+    <meta name="revisit-after" content="1 day" />
 
     {% ifinstalled mezzanine.blog %}
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">

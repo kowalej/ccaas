@@ -7,7 +7,7 @@
 	{% editable page.title %}
 	<li{% if not forloop.last %} class="page"{% endif %}>
 		<h3><a href="{% url "page" page.slug %}">{{ page.title }}</a></h3>
-		{% with page.featured_image as fi %}
+		{% with page.featured_image_cc as fi %}
 		{% if fi %}
 			<a class="image" href="{% url "page" page.slug %}">
 				<img title="{{ page.title }}" alt="{{ page.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image" />

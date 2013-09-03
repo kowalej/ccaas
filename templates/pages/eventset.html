@@ -14,10 +14,10 @@
 
 <ul class="page-list">
 {% for event in page.eventset.children.all %}
-{% editable event.title event.featured_image %}
+{% editable event.title event.featured_image_cc %}
 <li{% if not forloop.last %} class="page"{% endif %}>	
 	<h3><a href="{% url "page" event.slug %}">{{ event.title }}</a></h3>
-	{% with event.featured_image as fi %}
+	{% with event.featured_image_cc as fi %}
 	{% if fi %}
 		<a class="image" href="{% url "page" event.slug %}">
 			<img title="{{ event.title }}" alt="{{ event.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image" />
