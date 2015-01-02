@@ -1,3 +1,5 @@
+{% load mezzanine_tags cc_tags %}
+
 <ul class="widgets">
 	<li>
 		<ul id="side-facts">
@@ -23,6 +25,16 @@
 				<p>Aims to deliver proper sanitation to schools in Kenya, enhancing health
 				and enabling education.</p>
 			</li>
+			{% get_extra_facts 5 extra_facts %}
+				{% if extra_facts %}
+					{% for extra_fact in extra_facts %}
+						<li id="extra-fact">
+							<h2 class="bold">{% if extra_fact.title %}{{ extra_fact.title }}{% endif %}</h2>
+							{{ extra_fact.content|richtext_filter|safe }}
+						</li>
+					{% endfor %}
+				{% endif %}
+
 		</ul>
 	</li>
 </ul>

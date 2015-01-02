@@ -1,0 +1,27 @@
+{% load i18n future pages_tags %}
+{% load mezzanine_tags pages_tags cc_tags %}
+
+{% spaceless %}
+{% if page_branch %}
+
+	<ul class="page-list">
+	{% for page in page_branch %}
+
+		{% editable page.event.title page.event.featured_image_cc %}
+		<li{% if not forloop.last %} class="page"{% endif %}>	
+			<h3><a href="{% url "page" page.event.slug %}">{{ page.event.title }}</a></h3>
+			{% with page.event.featured_image_cc as fi %}
+			{% if fi %}
+				<a class="image" href="{% url "page" page.event.slug %}">
+					<img title="{{ page.event.title }}" alt="{{ page.event.title }}" src="{{ MEDIA_URL }}{% thumbnail fi 1024 0 %}" class="featured-image" />
+				</a>
+			{% endif %}
+			{% endwith %}
+		</li>
+		{% endeditable %}
+
+	{% endfor %}
+	</ul>
+
+{% endif %}
+{% endspaceless %}

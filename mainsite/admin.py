@@ -72,6 +72,11 @@ class SlideAdmin(PageAdmin):
     fieldsets[0][1]["fields"] += slide_extra_fieldsets
     fieldsets[0][1]["fields"] += featured_image_fieldset
 
+class ExtraFactAdmin(PageAdmin):
+    fieldsets = deepcopy(DisplayableAdmin.fieldsets)
+    fieldsets[0][1]["fields"] += rt_page_fieldsets
+    fieldsets[0][1]["fields"] += featured_image_fieldset
+
 admin.site.register(LocalSchoolSet, LocalSchoolSetAdmin)
 admin.site.register(ForeignSchoolSet, ForeignSchoolSetAdmin)
 admin.site.register(ProgramSet, ProgramSetAdmin)
@@ -82,6 +87,7 @@ admin.site.register(Event, EventAdmin)
 admin.site.register(LocalSchool, LocalSchoolAdmin)
 admin.site.register(ForeignSchool, ForeignSchoolAdmin)
 admin.site.register(Slide, SlideAdmin)
+admin.site.register(ExtraFact, ExtraFactAdmin)
 admin.site.unregister(RichTextPage)
 admin.site.register(RichTextPage, MRichTextPageAdmin)
 

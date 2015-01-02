@@ -94,3 +94,9 @@ class Slide(Page, RichText):
 		verbose_name = _("Front Page Slide")
 		verbose_name_plural = _("Front Page Slides")
 
+class ExtraFact(Page, RichText):
+
+	class Meta:
+		verbose_name = _("Extra fact")
+		verbose_name_plural = _("Extra facts")
+

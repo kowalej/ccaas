@@ -2,7 +2,7 @@ from django import template
 from mezzanine.blog.models import BlogPost
 from mezzanine.pages.models import Page
 from mezzanine.galleries.models import Gallery
-from mainsite.models import Slide
+from mainsite.models import Slide, ExtraFact
 import re
 import random
 from mezzanine.utils.views import paginate
@@ -60,6 +60,24 @@ class GetSlides(template.Node):
 
     def render(self, context):
         context[self.var_name] = list(Slide.objects.all()[:self.limit])
+        return ''
+
+def get_extra_facts(parser, token):
+     # This version uses a regular expression to parse tag contents.
+    try:
+        # Splitting by None == splitting by spaces.
+        tag_name, limit, var_name = token.contents.split()
+    except ValueError:
+        raise template.TemplateSyntaxError("%r tag requires arguments" % token.contents[0])
+    return GetExtraFacts(limit, var_name)
+
+class GetExtraFacts(template.Node):
+    def __init__(self, limit, var_name):
+        self.limit = limit
+        self.var_name = var_name
+
+    def render(self, context):
+        context[self.var_name] = list(ExtraFact.objects.all()[:self.limit])
         return ''
 
 def get_home_page(parser, token):
@@ -122,6 +140,7 @@ def is_link(value):
 register.filter(is_link)
 register.tag('upper', do_upper)
 register.tag(get_slides)
+register.tag(get_extra_facts)
 register.tag(get_home_page)
 register.tag(get_gallery)
 register.tag(random_num)
