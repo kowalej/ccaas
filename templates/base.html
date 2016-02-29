@@ -12,6 +12,8 @@
 	<meta name="robots" content="index, follow" />
     <meta name="revisit-after" content="1 day" />
 
+	<link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" type="image/x-icon" />
+
     {% ifinstalled mezzanine.blog %}
 	<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
 	<link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
