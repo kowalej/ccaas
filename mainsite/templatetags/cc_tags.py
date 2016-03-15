@@ -59,7 +59,7 @@ class GetSlides(template.Node):
         self.var_name = var_name
 
     def render(self, context):
-        context[self.var_name] = list(Slide.objects.all()[:self.limit])
+        context[self.var_name] = list(Slide.objects.published()[:self.limit])
         return ''
 
 def get_extra_facts(parser, token):
